@@ -1,0 +1,64 @@
+{% extends 'news/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="tm-main-section light-gray-bg">
+    <div class="container" id="main">
+        <section class="tm-section row">
+            <div class="col-lg-12 tm-popular-items-container">
+                <a href="{% url 'news:my_comments' %}" class="tm-more-button" type="submit" name="submit">Мои
+                    комментарии</a>
+                <a href="{% url 'news:my_subscribes' %}" class="tm-more-button" type="submit" name="submit">Мои
+                    подписки</a>
+            </div>
+            <div class="col-lg-12 tm-section-header-container">
+                <h1 class="tm-section-header gold-text tm-handwriting-font">Ваш профиль</h1>
+                <div class="tm-hr-container">
+                    <hr class="tm-hr">
+                </div>
+            </div>
+            <form action="{% url 'users:profile' user.id %}" method="post" enctype="multipart/form-data"
+                  class="tm-contact-form">{% csrf_token %}
+                <div class="col-lg-9 col-md-9 col-sm-8">
+                    <div class="form-group">
+                        <label id="{{ form.avatar.id_for_label }}">Аватарка</label>
+                        {{ form.avatar }}
+                    </div>
+                    <div class="form-group">
+                        <label id="{{ form.email.id_for_label }}">Логин</label>
+                        {{ form.username }}
+                    </div>
+                    <div class="form-group">
+                        <label id="{{ form.username.id_for_label }}">Эл. Почта
+                        </label>
+                        {% if user.check_email %}
+                        <i class="fa fa-check" title="Почта подтверждена" aria-hidden="true"></i>
+                        {% else %}
+                        <i class="fa fa-times" title="Почта НЕ подтверждена" aria-hidden="true"></i>
+                        {% endif %}
+                        {{ form.email }}
+                    </div>
+                    <button class="tm-more-button" type="submit" name="submit">Cохранить</button>
+                </div>
+            </form>
+            <div class="col-lg-3 col-md-3 col-sm-4 tm-welcome-img-container">
+                <div class="inline-block shadow-img">
+                    <img src="{% if user.avatar %}{{ user.avatar.url }}
+                    {% else %}{% static 'img/default_avatar_rpg.png' %}{% endif %}"
+                         alt="Image" class="img-circle img-thumbnail">
+                </div>
+                <p class="tm-welcome-description">Рейтинг: <span class="gold-text">{{ user_rating }}</span></p>
+                <p class="tm-welcome-description">Зарегистрирован: <span class="gold-text">{{ user.date_joined|date:"d.m.Y" }}</span></p>
+            </div>
+        </section>
+        <div class="col-lg-12 tm-popular-items-container">
+            <a href="{% url 'users:change_password' %}" class="tm-more-button" type="submit" name="submit">Изменить пароль</a>
+            <a href="{% url 'users:logout' %}" class="tm-more-button" type="submit" name="submit">Выход</a>
+            {% if not user.check_email %}
+            <a href="{% url 'users:new_verify' %}" class="tm-more-button" type="submit" name="submit">Подтвердить почту</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

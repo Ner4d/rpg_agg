@@ -1,0 +1,109 @@
+{% extends 'news/base.html' %}
+
+{% load static humanize %}
+
+{% block content %}
+<section class="tm-welcome-section">
+    <div class="container tm-position-relative">
+        <div class="tm-lights-container">
+            <img src="{% static 'img/light.png' %}" alt="Light" class="light light-1">
+            <img src="{% static 'img/light.png' %}" alt="Light" class="light light-2">
+            <img src="{% static 'img/light.png' %}" alt="Light" class="light light-3">
+        </div>
+        <div class="row tm-welcome-content">
+            <h2 class="white-text tm-handwriting-font tm-welcome-header">
+                <img src="{% static 'img/header-line.png' %}"
+                     alt="Line"
+                     class="tm-header-line">&nbsp;{{ object.created_timestamp|naturalday }}&nbsp;&nbsp;<img
+                    src="{% static 'img/header-line.png' %}" alt="Line" class="tm-header-line"></h2>
+            <a href="{% url 'news:game_detail' object.game.id %}"
+               class="gold-text tm-welcome-header-2">{{ object.game.name }}</a>
+            <p class="gray-text tm-welcome-description">Автор: <span
+                    class="gold-text">{{ object.author }}</span></p>
+            <p class="gold-text tm-welcome-description"><a class="gold-text" href="{{ object.source_url }}">Источник</a>
+            </p>
+            <p class="gray-text tm-welcome-description">Рейтинг: <span
+                    class="gold-text">{{ object.rating.total }}</span>
+                <a href="{% url 'news:add_voice' 'post' object.id 'likes' %}">
+                    <i class="fa fa-plus-square fa-3x" aria-hidden="true"></i></a>
+                <a href="{% url 'news:add_voice' 'post' object.id 'dislikes' %}">
+                    <i class="fa fa-minus-square fa-3x" aria-hidden="true"></i></a>
+            </p>
+        </div>
+        <div class="col-lg-12 tm-section-header-container">
+            <div class="tm-hr-container">
+                <hr class="tm-hr">
+            </div>
+        </div>
+        <div class="col-lg-12 tm-section-header-container">
+            <div class="tm-hr-container">
+                <hr class="tm-hr">
+            </div>
+        </div>
+        <div class="tm-special-container-left">
+            <div class="tm-special-item">
+                <img style="max-width:989px;width:100%; max-height:427px;height:100%" src="{% if object.post_image %}{{ object.post_image.url }}
+                {% else %}{{ object.game.image.url }}
+                {% endif %}" alt="Изображение отсутствует"
+                     class="gray-text tm-table-set img-responsive">
+            </div>
+        </div>
+        <div class="tm-special-description">
+            <p>{{ object.title }}</p>
+        </div>
+    </div>
+</section>
+<div class="tm-main-section light-gray-bg">
+    <div class="container" id="main">
+        <section class="tm-section row">
+            {% autoescape off %}
+            {{ object.content|linebreaksbr }}
+            {% endautoescape %}
+        </section>
+        <div class="col-lg-12 tm-section-header-container">
+            <h1 class="tm-section-header gold-text tm-handwriting-font">Комментарии</h1>
+            <div class="tm-hr-container">
+                <hr class="tm-hr">
+            </div>
+        </div>
+        <section class="tm-welcome-row">
+            {% for comment in object_list %}
+            <div class="tm-menu-product-content col-lg-9 col-md-9">
+                <div class="tm-product">
+                    <div style="float:left; display: block;">
+                        <p>{{ comment.user.username }}</p>
+                        <img width="50" height="50" src="{{ comment.user.avatar.url }}" class="avatar">
+                        <span class="tm-product-description">{{ comment.message }}</span>
+                    </div>
+                    <div class="tm-product-text">
+                    </div>
+                    <div class="post_rating" style="float:right; display: block;font-size: 20px">
+                        <div class="">
+                            <span class="">{{ comment.rating.total }}</span>
+                        </div>
+                        {% if comment.user != user %}
+                        <a href="{% url 'news:add_voice' 'comment' comment.id 'likes' %}">
+                            <i class="fa fa-plus-square fa-2x" aria-hidden="true"></i></a>
+                        <a href="{% url 'news:add_voice' 'comment' comment.id 'dislikes' %}">
+                            <i class="fa fa-minus-square fa-2x" aria-hidden="true"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+        <form action="{% url 'news:write_comment' object.id %}"
+              method="post" class="tm-contact-form">{% csrf_token %}
+            <div class="col-lg-6 col-md-6">
+                <div class="form-group">
+                        <textarea id="message" name="message" class="form-control" rows="3"
+                                  placeholder="Напишите что-нибудь"></textarea>
+                </div>
+                <div class="form-group">
+                    <button class="tm-more-button" type="submit" name="submit">Отправить</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

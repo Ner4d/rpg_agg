@@ -1,0 +1,40 @@
+{% extends 'news/base.html' %}
+
+{% load static humanize %}
+
+{% block content %}
+<div class="tm-main-section light-gray-bg">
+    <div class="container" id="main">
+
+        <section class="tm-section tm-section-margin-bottom-0 row">
+            {% if user.is_authenticated %}
+            <a href="{% url 'news:subs_feed' %}"><button class="tm-more-button" type="submit" name="submit">Подписки</button></a>
+            {% endif %}
+            <div class="col-lg-12 tm-section-header-container">
+                <h1 class="tm-section-header gold-text tm-handwriting-font">Лента новостей</h1>
+                <div class="tm-hr-container">
+                    <hr class="tm-hr">
+                </div>
+            </div>
+            <div class="col-lg-12 tm-popular-items-container">
+                {% for news_post in object_list %}
+                <div class="tm-popular-item">
+                    <img src="{{ news_post.game.image.url }}" width="286" height="87" alt="Изображение отсутствует"
+                         class="tm-popular-item-img">
+                    <div class="tm-popular-item-description">
+                        <h4 class="">{{ news_post.created_timestamp|naturalday }}</h4>
+                        <h3 class="tm-handwriting-font tm-popular-item-title">{{ news_post.game.name }}</h3>
+                        <hr class="tm-popular-item-hr">
+                        <p>{{ news_post.title|truncatechars:88 }}</p>
+                        <div class="order-now-container">
+                                <a href="{% url 'news:post_detail' news_post.id %}"
+                                   class="order-now-link tm-handwriting-font"><h1>...</h1></a>
+                            </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

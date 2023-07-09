@@ -1,0 +1,40 @@
+{% extends 'news/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="tm-main-section light-gray-bg">
+    <div class="container" id="main">
+        <section class="tm-section tm-section-margin-bottom-0 row">
+            <form action="{% url 'news:search' %}" class="search form-input" role="search"><label
+                    class="visuallyhidden" for="game_name">Поиск в steam</label>
+                <input type="search" name="game_name" placeholder="Введите название игры" id="game_name">
+                <button type="submit"><i class="icon icon-search"></i> <span class="visuallyhidden">Поиск</span>
+                </button>
+            </form>
+            <div class="col-lg-12">
+                {% for game in object_list %}
+                <div class="tm-hr-container">
+                    <hr class="tm-hr">
+                </div>
+                <section class="tm-section row">
+                    <div class="col-lg-9 col-md-9 col-sm-8">
+                        <h3 class="tm-product-title">{{ game.name|cut:"\u2122"|cut:"\u00ae" }}</h3>
+                        <div class="tm-special-img-container">
+                            <img width="186" src="{{ game.img }}" alt="Special" class="img-responsive">
+                        </div>
+                        <p class="tm-welcome-description">Страница игры в <a href="{{ game.link }}">steam</a></p>
+                        {% if game.id in game_in_library %}
+                        <p class="tm-welcome-description">Эта игра уже есть в нашей библиотеке <i
+                                class="fa fa-check" title="Почта подтверждена" aria-hidden="true"></i></p>
+                        {% else %}
+                        <a href="{% url 'news:add_game' game.id %}" class="tm-more-button">Предложить</a>
+                        {% endif %}
+                    </div>
+                </section>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

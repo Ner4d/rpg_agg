@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RPG Tavern</title>
+    <!--
+    Cafe House Template
+    http://www.templatemo.com/tm-466-cafe-house
+    -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,700' rel='stylesheet'
+          type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Damion' rel='stylesheet' type='text/css'>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/templatemo-style.css' %}" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<!-- Preloader -->
+<div id="loader-wrapper">
+    <div id="loader"></div>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>
+<!-- End Preloader -->
+<div class="tm-top-header">
+    <div class="container">
+        <div class="row">
+            <div class="tm-top-header-inner">
+                <div class="tm-logo-container">
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="tm-site-logo">
+                    <h1 class="tm-site-name tm-handwriting-font">RPG Tavern</h1>
+                </div>
+                <div class="mobile-menu-icon">
+                    <i class="fa fa-bars"></i>
+                </div>
+                <nav class="tm-nav">
+                    <ul>
+                        <li><a href="{% url 'index' %}">Главная</a></li>
+                        <li><a href="{% url 'news:feed' %}">Лента</a></li>
+                        <li><a href="{% url 'news:library' %}">Наша библиотека</a></li>
+                        {% if user.is_authenticated %}
+                        <li><a href="{% url 'users:profile' user.id %}">Профиль</a></li>
+                        {% else %}
+                        <li><a href="{% url 'users:login' %}">Вход</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% block content %}
+{% endblock %}
+<footer>
+    {% if is_paginated %}
+    <div class="tm-black-bg">
+        <div class="container">
+            <div class="row margin-bottom-60">
+                <nav class="col-lg-3 col-md-3 tm-footer-nav tm-footer-div">
+                    {% if page_obj.has_previous %}
+                    <a class="page-link tm-footer-div-title"
+                       href="?page={{ page_obj.previous_page_number }}"
+                       aria-disabled="true">Предыдущая</a>
+                    <br>
+                    <a class="gold-text" href="?page=1">&laquo; Начало</a>
+                    {% endif %}
+                </nav>
+                <div class="col-lg-5 col-md-5 tm-footer-div">
+                    <ul class="pagination justify-content-center">
+                        {% for page in page_obj.paginator.page_range %}
+                        <li class="tm-social-icon page-item ">
+                            {% if page_obj.number == page %}
+                            <p>{{ page }}</p>
+                            {% else %}
+                            <a class="gold-text page-link" href="?page={{ page }}">{{ page }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-3 tm-footer-nav tm-footer-div">
+                    {% if page_obj.has_next %}
+                    <a class="page-link tm-footer-div-title"
+                       href="?page={{ page_obj.next_page_number }}">Следующая</a>
+                    <br>
+                    <a class="gold-text" href="?page={{ page_obj.paginator.num_pages }}">Конец &raquo;</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="tm-black-bg">
+        <div class="container">
+            <div class="row tm-copyright">
+                <p class="col-lg-12 small copyright-text text-center">Design based on Cafe House:
+                    <a class="green-text" href="https://templatemo.com">Templatemo</a></p>
+            </div>
+        </div>
+    </div>
+</footer> <!-- Footer content-->
+<!-- JS -->
+<script type="text/javascript" src="{% static 'js/jquery-1.11.2.min.js' %}"></script>      <!-- jQuery -->
+<script type="text/javascript" src="{% static 'js/templatemo-script.js' %}"></script>      <!-- Templatemo Script -->
+
+</body>
+</html>
